@@ -200,7 +200,3 @@ Se desideri approfondire l'architettura del software, i pattern dei custom hook 
 Distribuito sotto licenza **MIT**. Consulta il file `LICENSE` per maggiori informazioni.
 
 ---
-
-<div align="center">
-  Fatto con ❤️, tanta farina e un pizzico di zucchero 🍪
-</div>
