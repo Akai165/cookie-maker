@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+:root {
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  background: #f5f0e8;
+}
+
+#root {
+  max-width: 100%;
+  min-height: 100svh;
+}
+
+/* Nasconde la scrollbar mantenendo lo scroll funzionale */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #fed7aa transparent;
+}
