@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { useProfile } from './hooks/useProfile';
 import Navbar from './components/Navbar';
 import LoginScreen from './components/LoginScreen';
@@ -15,35 +16,47 @@ function AppContent() {
   // Schermata di caricamento iniziale (controlla se è già loggato)
   if (loading || (user && profileLoading)) {
     return (
-      <div className="min-h-screen bg-[#FFF8EE] flex items-center justify-center">
-        <div className="text-center">
-          <div className="text-6xl animate-bounce mb-4">🍪</div>
-          <p className="text-orange-400 font-medium">Caricamento...</p>
+      <ThemeProvider userId={null}>
+        <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg)' }}>
+          <div className="text-center">
+            <div className="text-6xl animate-bounce mb-4">🍪</div>
+            <p className="font-medium" style={{ color: 'var(--primary)' }}>Caricamento...</p>
+          </div>
         </div>
-      </div>
+      </ThemeProvider>
     );
   }
 
   // Se non è loggato, mostra la schermata di login
   if (!user) {
-    return <LoginScreen />;
+    return (
+      <ThemeProvider userId={null}>
+        <LoginScreen />
+      </ThemeProvider>
+    );
   }
 
   // Se il sesso non è ancora scelto, mostra la schermata di selezione
   if (!sesso) {
-    return <GenderPicker onSelect={setSesso} />;
+    return (
+      <ThemeProvider userId={user.uid}>
+        <GenderPicker onSelect={setSesso} />
+      </ThemeProvider>
+    );
   }
 
   // App principale
   return (
-    <div className="max-w-md mx-auto bg-[#FFF8EE] min-h-screen relative shadow-2xl">
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/forno" element={<Forno />} />
-        <Route path="/shop" element={<Shop />} />
-      </Routes>
-      <Navbar />
-    </div>
+    <ThemeProvider userId={user.uid}>
+      <div className="max-w-md mx-auto min-h-screen relative shadow-2xl" style={{ background: 'var(--bg)' }}>
+        <Routes>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/forno" element={<Forno />} />
+          <Route path="/shop" element={<Shop />} />
+        </Routes>
+        <Navbar />
+      </div>
+    </ThemeProvider>
   );
 }
 

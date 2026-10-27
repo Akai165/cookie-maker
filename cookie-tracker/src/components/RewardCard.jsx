@@ -13,16 +13,22 @@ export default function RewardCard({ reward, biscotti, onBuy, onEdit, onDelete }
   const deficit = reward.costo - biscotti;
 
   return (
-    <div className="bg-white rounded-2xl border border-orange-100 p-5 shadow-sm hover:shadow-md transition-all">
+    <div
+      className="rounded-2xl p-5 shadow-sm hover:shadow-md transition-all"
+      style={{ background: 'var(--bg-card)', border: '1px solid var(--border-card)' }}
+    >
       {/* Emoji e nome */}
       <div className="text-center mb-3">
         <div className="text-4xl mb-2">{reward.emoji || '🎁'}</div>
-        <h3 className="font-bold text-orange-950 text-lg">{reward.nome}</h3>
+        <h3 className="font-bold text-lg" style={{ color: 'var(--text)' }}>{reward.nome}</h3>
       </div>
 
       {/* Costo */}
       <div className="text-center mb-4">
-        <span className="inline-flex items-center gap-1 bg-orange-100 text-orange-700 font-bold px-3 py-1 rounded-full text-sm">
+        <span
+          className="inline-flex items-center gap-1 font-bold px-3 py-1 rounded-full text-sm"
+          style={{ background: 'var(--primary-light)', color: 'var(--primary-dark)' }}
+        >
           {reward.costo} 🍪
         </span>
       </div>
@@ -44,7 +50,8 @@ export default function RewardCard({ reward, biscotti, onBuy, onEdit, onDelete }
       <div className="flex gap-2 mt-3 justify-center">
         <button
           onClick={onEdit}
-          className="text-xs text-orange-400 hover:text-orange-600 font-medium px-2 py-1 rounded-lg hover:bg-orange-50 transition-all"
+          className="text-xs font-medium px-2 py-1 rounded-lg transition-all"
+          style={{ color: 'var(--text-faint)' }}
         >
           ✏️ Modifica
         </button>

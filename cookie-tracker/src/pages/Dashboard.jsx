@@ -6,14 +6,16 @@ import { useCompletions } from '../hooks/useCompletions';
 import { useMilestones } from '../hooks/useMilestones';
 import Calendar from '../components/Calendar';
 import TaskCard from '../components/TaskCard';
-import { isToday, toDateString, MESI, GIORNI } from '../utils/dateUtils';
+import FullScreenTimer from '../components/FullScreenTimer';
+import ActivityForm from '../components/ActivityForm';
+import { isToday, MESI } from '../utils/dateUtils';
 
 const GIORNI_LABEL_FULL = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
-  const { biscotti, sesso, loading: profileLoading } = useProfile(user?.uid);
-  const { getActivitiesForDay, loading: actLoading } = useActivities(user?.uid);
+  const { biscotti, loading: profileLoading } = useProfile(user?.uid);
+  const { getActivitiesForDay, addActivity, loading: actLoading } = useActivities(user?.uid);
   const {
     completeActivity, uncompleteActivity, findCompletion,
     getCompletedDays, getMonthlyTotal, loading: compLoading,
@@ -21,6 +23,8 @@ export default function Dashboard() {
   const { milestones, loading: milestonesLoading } = useMilestones(user?.uid);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [activeTimerTask, setActiveTimerTask] = useState(null);
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
 
   const loading = profileLoading || actLoading || compLoading || milestonesLoading;
 
@@ -56,26 +60,30 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFF8EE] p-4 pb-24 font-sans">
+    <div className="min-h-screen p-4 pb-24 font-sans" style={{ background: 'var(--bg)' }}>
       {/* Header con logout */}
       <div className="flex justify-between items-center mb-4">
-        <span className="text-sm text-orange-400 truncate">
+        <span className="text-sm font-medium truncate" style={{ color: 'var(--text-faint)' }}>
           {user?.displayName?.split(' ')[0] || 'Ciao'} 👋
         </span>
         <button
           onClick={logout}
-          className="text-xs text-orange-300 hover:text-orange-600 font-medium px-2 py-1 rounded-lg hover:bg-orange-50 transition-all"
+          className="text-xs font-medium px-2 py-1 rounded-lg transition-all"
+          style={{ color: 'var(--text-faint)' }}
         >
           Esci
         </button>
       </div>
 
       {/* Barattolo biscotti */}
-      <div className="flex flex-col items-center justify-center bg-white p-6 rounded-3xl shadow-md border border-orange-100 mb-6">
-        <h1 className="text-lg font-extrabold text-orange-900 mb-2 tracking-wide">
+      <div
+        className="flex flex-col items-center justify-center p-6 rounded-3xl shadow-md mb-6"
+        style={{ background: 'var(--bg-card)', border: '1px solid var(--border-card)' }}
+      >
+        <h1 className="text-lg font-extrabold mb-2 tracking-wide" style={{ color: 'var(--text)' }}>
           Il tuo barattolo:
         </h1>
-        <div className="text-5xl font-black text-orange-500 flex items-center gap-2 drop-shadow-sm">
+        <div className="text-5xl font-black flex items-center gap-2 drop-shadow-sm" style={{ color: 'var(--primary)' }}>
           {loading ? '...' : biscotti}
           <span className="text-4xl animate-bounce">🍪</span>
         </div>
@@ -83,12 +91,18 @@ export default function Dashboard() {
 
       {/* Traguardi mensili */}
       {milestones.length > 0 && (
-        <div className="bg-white rounded-2xl shadow-sm border border-amber-100 p-4 mb-6">
+        <div
+          className="rounded-2xl shadow-sm p-4 mb-6"
+          style={{ background: 'var(--bg-card)', border: '1px solid var(--border-card)' }}
+        >
           <div className="flex justify-between items-center mb-3">
-            <h2 className="text-base font-bold text-amber-900">
+            <h2 className="text-base font-bold" style={{ color: 'var(--text)' }}>
               🏆 {MESI[selectedMonth]}
             </h2>
-            <span className="text-sm font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full">
+            <span
+              className="text-sm font-bold px-2.5 py-1 rounded-full"
+              style={{ color: 'var(--primary-dark)', background: 'var(--primary-light)' }}
+            >
               {monthlyTotal} 🍪
             </span>
           </div>
@@ -101,7 +115,7 @@ export default function Dashboard() {
               return (
                 <div key={m.id} className="flex flex-col gap-1.5">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-semibold text-amber-950">
+                    <span className="text-sm font-semibold" style={{ color: 'var(--text)' }}>
                       {m.emoji} {m.nome}
                     </span>
                     {unlocked ? (
@@ -109,17 +123,18 @@ export default function Dashboard() {
                         ✅ Sbloccato!
                       </span>
                     ) : (
-                      <span className="text-xs font-medium text-amber-500">
+                      <span className="text-xs font-medium" style={{ color: 'var(--primary-muted)' }}>
                         {monthlyTotal}/{m.soglia} 🍪
                       </span>
                     )}
                   </div>
-                  <div className="w-full bg-amber-100 rounded-full h-2.5">
+                  <div className="w-full rounded-full h-2.5" style={{ background: 'var(--primary-light)' }}>
                     <div
-                      className={`h-2.5 rounded-full transition-all duration-700 ${
-                        unlocked ? 'bg-green-400' : 'bg-amber-400'
-                      }`}
-                      style={{ width: `${progress * 100}%` }}
+                      className="h-2.5 rounded-full transition-all duration-700"
+                      style={{
+                        width: `${progress * 100}%`,
+                        background: unlocked ? '#4ade80' : 'var(--primary)',
+                      }}
                     />
                   </div>
                 </div>
@@ -136,13 +151,23 @@ export default function Dashboard() {
         completedDays={completedDays}
       />
 
-      {/* Titolo giorno + progress */}
+      {/* Titolo giorno + bottone rapido + progress */}
       <div className="flex justify-between items-center mb-3 px-1">
-        <h2 className="text-xl font-bold text-orange-950">
-          {dateLabel}
-        </h2>
+        <div className="flex items-center gap-2">
+          <h2 className="text-xl font-bold" style={{ color: 'var(--text)' }}>
+            {dateLabel}
+          </h2>
+          <button
+            onClick={() => setShowQuickAdd(true)}
+            className="text-xs font-bold px-2.5 py-1 rounded-xl transition-all active:scale-95 shadow-sm text-white flex items-center gap-1"
+            style={{ background: 'var(--primary)' }}
+            title="Aggiungi quest per questo giorno"
+          >
+            <span>+ Quest</span>
+          </button>
+        </div>
         {totalCount > 0 && (
-          <span className="text-sm font-semibold text-orange-500">
+          <span className="text-sm font-semibold" style={{ color: 'var(--primary)' }}>
             {completedCount}/{totalCount} ✓
           </span>
         )}
@@ -150,10 +175,13 @@ export default function Dashboard() {
 
       {/* Barra di progresso giornaliera */}
       {totalCount > 0 && (
-        <div className="w-full bg-orange-100 rounded-full h-2 mb-4">
+        <div className="w-full rounded-full h-2 mb-4" style={{ background: 'var(--primary-light)' }}>
           <div
-            className="bg-orange-500 h-2 rounded-full transition-all duration-500"
-            style={{ width: `${(completedCount / totalCount) * 100}%` }}
+            className="h-2 rounded-full transition-all duration-500"
+            style={{
+              width: `${(completedCount / totalCount) * 100}%`,
+              background: 'var(--primary)',
+            }}
           />
         </div>
       )}
@@ -161,15 +189,25 @@ export default function Dashboard() {
       {/* Lista attività */}
       <div className="flex flex-col gap-3">
         {loading ? (
-          <div className="text-center text-orange-400 py-8">Caricamento... 🍪</div>
+          <div className="text-center py-8" style={{ color: 'var(--primary-muted)' }}>Caricamento... 🍪</div>
         ) : dayActivities.length === 0 ? (
-          <div className="bg-orange-100/50 rounded-2xl p-8 text-center border border-orange-200 shadow-inner">
-            <p className="text-lg font-bold text-orange-800 mb-2">
-              {isTodaySelected ? 'Nessuna attività per oggi' : 'Nessuna attività per questo giorno'}
+          <div
+            className="rounded-2xl p-8 text-center shadow-inner"
+            style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border)' }}
+          >
+            <p className="text-lg font-bold mb-2" style={{ color: 'var(--text-mid)' }}>
+              {isTodaySelected ? 'Nessuna quest per oggi' : 'Nessuna quest per questo giorno'}
             </p>
-            <p className="text-2xl">
-              {isTodaySelected ? 'Vai al Forno per crearne una! 📝' : '📅'}
+            <p className="text-sm mb-4" style={{ color: 'var(--text-soft)' }}>
+              Aggiungi una quest con o senza timer per iniziare!
             </p>
+            <button
+              onClick={() => setShowQuickAdd(true)}
+              className="text-white font-bold py-2.5 px-5 rounded-xl shadow-md transition-all active:scale-95 text-sm"
+              style={{ background: 'var(--primary)' }}
+            >
+              + Crea Quest per {isTodaySelected ? 'Oggi' : 'questo giorno'} 🍪
+            </button>
           </div>
         ) : (
           <>
@@ -182,6 +220,7 @@ export default function Dashboard() {
                   isCompleted={!!completion}
                   onComplete={() => handleComplete(task)}
                   onUncomplete={() => handleUncomplete(task)}
+                  onStartTimer={(t) => setActiveTimerTask(t)}
                 />
               );
             })}
@@ -195,6 +234,28 @@ export default function Dashboard() {
           </>
         )}
       </div>
+
+      {/* Timer a schermo intero */}
+      {activeTimerTask && (
+        <FullScreenTimer
+          task={activeTimerTask}
+          onComplete={async (task) => {
+            await handleComplete(task);
+          }}
+          onClose={() => setActiveTimerTask(null)}
+        />
+      )}
+
+      {/* Modal creazione rapida */}
+      {showQuickAdd && (
+        <ActivityForm
+          initialDate={selectedDate}
+          onSave={async (data) => {
+            await addActivity(data);
+          }}
+          onClose={() => setShowQuickAdd(false)}
+        />
+      )}
     </div>
   );
 }

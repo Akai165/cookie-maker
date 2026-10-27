@@ -83,33 +83,44 @@ export default function Shop() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFF8EE] p-4 pb-24 font-sans">
+    <div className="min-h-screen p-4 pb-24 font-sans" style={{ background: 'var(--bg)' }}>
       {/* Header con saldo */}
       <div className="flex justify-between items-center mb-6 mt-2">
-        <h1 className="text-2xl font-black text-orange-900">Negozio 🛍️</h1>
-        <span className="bg-orange-100 text-orange-700 font-bold px-3 py-1.5 rounded-full text-sm">
+        <h1 className="text-2xl font-black" style={{ color: 'var(--text)' }}>Negozio 🛍️</h1>
+        <span
+          className="font-bold px-3 py-1.5 rounded-full text-sm"
+          style={{ background: 'var(--primary-light)', color: 'var(--primary-dark)' }}
+        >
           {loading ? '...' : biscotti} 🍪
         </span>
       </div>
 
       {/* ============ SEZIONE PREMI ============ */}
       <section className="mb-8">
-        <h2 className="text-lg font-bold text-orange-800 mb-3">🎁 Premi</h2>
+        <h2 className="text-lg font-bold mb-3" style={{ color: 'var(--text-mid)' }}>🎁 Premi</h2>
 
         <button
           onClick={() => setShowRewardForm(true)}
-          className="w-full bg-white hover:bg-orange-50 text-orange-600 font-bold py-3.5 rounded-2xl border-2 border-dashed border-orange-300 transition-all active:scale-[0.98] mb-4 text-sm"
+          className="w-full font-bold py-3.5 rounded-2xl border-2 border-dashed transition-all active:scale-[0.98] mb-4 text-sm"
+          style={{
+            background: 'var(--bg-card)',
+            color: 'var(--primary)',
+            borderColor: 'var(--border)',
+          }}
         >
           + Aggiungi Premio
         </button>
 
         {loading ? (
-          <div className="text-center text-orange-400 py-8">Caricamento... 🍪</div>
+          <div className="text-center py-8" style={{ color: 'var(--primary-muted)' }}>Caricamento... 🍪</div>
         ) : rewards.length === 0 ? (
-          <div className="bg-orange-100/50 rounded-2xl p-6 text-center border border-orange-200 shadow-inner">
+          <div
+            className="rounded-2xl p-6 text-center shadow-inner"
+            style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border)' }}
+          >
             <p className="text-3xl mb-2">🎁</p>
-            <p className="text-sm font-bold text-orange-800">Nessun premio creato</p>
-            <p className="text-xs text-orange-600 mt-1">Crea i tuoi premi e compra con i biscotti!</p>
+            <p className="text-sm font-bold" style={{ color: 'var(--text-mid)' }}>Nessun premio creato</p>
+            <p className="text-xs mt-1" style={{ color: 'var(--text-soft)' }}>Crea i tuoi premi e compra con i biscotti!</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-3">
@@ -129,38 +140,47 @@ export default function Shop() {
 
       {/* ============ SEZIONE TRAGUARDI MENSILI ============ */}
       <section>
-        <h2 className="text-lg font-bold text-amber-800 mb-3">🏆 Traguardi Mensili</h2>
-        <p className="text-xs text-amber-600 mb-3">
+        <h2 className="text-lg font-bold mb-3" style={{ color: 'var(--text-mid)' }}>🏆 Traguardi Mensili</h2>
+        <p className="text-xs mb-3" style={{ color: 'var(--text-faint)' }}>
           Si sbloccano guadagnando abbastanza biscotti nel mese — non servono biscotti per comprarli!
         </p>
 
         <button
           onClick={() => setShowMilestoneForm(true)}
-          className="w-full bg-white hover:bg-amber-50 text-amber-600 font-bold py-3.5 rounded-2xl border-2 border-dashed border-amber-300 transition-all active:scale-[0.98] mb-4 text-sm"
+          className="w-full font-bold py-3.5 rounded-2xl border-2 border-dashed transition-all active:scale-[0.98] mb-4 text-sm"
+          style={{
+            background: 'var(--bg-card)',
+            color: 'var(--primary)',
+            borderColor: 'var(--border)',
+          }}
         >
           + Aggiungi Traguardo
         </button>
 
         {loading ? (
-          <div className="text-center text-amber-400 py-8">Caricamento...</div>
+          <div className="text-center py-8" style={{ color: 'var(--primary-muted)' }}>Caricamento...</div>
         ) : milestones.length === 0 ? (
-          <div className="bg-amber-50 rounded-2xl p-6 text-center border border-amber-200 shadow-inner">
+          <div
+            className="rounded-2xl p-6 text-center shadow-inner"
+            style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border)' }}
+          >
             <p className="text-3xl mb-2">🏆</p>
-            <p className="text-sm font-bold text-amber-800">Nessun traguardo creato</p>
-            <p className="text-xs text-amber-600 mt-1">Crea obiettivi mensili per premi speciali!</p>
+            <p className="text-sm font-bold" style={{ color: 'var(--text-mid)' }}>Nessun traguardo creato</p>
+            <p className="text-xs mt-1" style={{ color: 'var(--text-soft)' }}>Crea obiettivi mensili per premi speciali!</p>
           </div>
         ) : (
           <div className="flex flex-col gap-3">
             {milestones.map((milestone) => (
               <div
                 key={milestone.id}
-                className="bg-white rounded-2xl border border-amber-100 p-4 hover:shadow-sm transition-all"
+                className="rounded-2xl p-4 hover:shadow-sm transition-all"
+                style={{ background: 'var(--bg-card)', border: '1px solid var(--border-card)' }}
               >
                 <div className="flex justify-between items-center mb-1">
-                  <span className="font-semibold text-amber-950">
+                  <span className="font-semibold" style={{ color: 'var(--text)' }}>
                     {milestone.emoji || '🏆'} {milestone.nome}
                   </span>
-                  <span className="text-sm font-bold text-amber-500">
+                  <span className="text-sm font-bold" style={{ color: 'var(--primary)' }}>
                     {milestone.soglia} 🍪/mese
                   </span>
                 </div>
@@ -168,7 +188,8 @@ export default function Shop() {
                 <div className="flex gap-1 mt-2">
                   <button
                     onClick={() => handleEditMilestone(milestone)}
-                    className="text-xs text-amber-400 hover:text-amber-600 font-medium px-2 py-1 rounded-lg hover:bg-amber-50 transition-all"
+                    className="text-xs font-medium px-2 py-1 rounded-lg transition-all"
+                    style={{ color: 'var(--text-faint)' }}
                   >
                     ✏️ Modifica
                   </button>

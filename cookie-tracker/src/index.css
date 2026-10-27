@@ -1,6 +1,26 @@
 @import "tailwindcss";
 
+/* ============================================================
+   Variabili CSS del tema — aggiornate da ThemeContext.jsx
+   I valori default corrispondono al tema Arancione.
+   ============================================================ */
 :root {
+  --bg:           #F5C89A;
+  --bg-card:      #FDDDB8;
+  --bg-subtle:    #F0B87C;
+  --border:       #E89A5A;
+  --border-card:  #F0B87C;
+  --primary:      #C25A10;
+  --primary-dark: #7A2E00;
+  --primary-light:#FDDDB8;
+  --primary-muted:#E07A30;
+  --text:         #3A1400;
+  --text-mid:     #7A2E00;
+  --text-soft:    #A03C10;
+  --text-faint:   #C05820;
+  --scrollbar:    #E89A5A;
+  --navbar-border:#F0B87C;
+
   font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -8,7 +28,8 @@
 
 body {
   margin: 0;
-  background: #f5f0e8;
+  background: var(--bg);
+  transition: background 0.3s ease;
 }
 
 #root {
@@ -16,8 +37,8 @@ body {
   min-height: 100svh;
 }
 
-/* Nasconde la scrollbar mantenendo lo scroll funzionale */
+/* Scrollbar tematizzata */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #fed7aa transparent;
+  scrollbar-color: var(--scrollbar) transparent;
 }

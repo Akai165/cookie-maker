@@ -50,15 +50,18 @@ export default function MilestoneForm({ milestone, onSave, onClose }) {
         onClick={onClose}
       />
 
-      <div className="relative bg-[#FFF8EE] w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
-        <h2 className="text-xl font-bold text-orange-900 mb-5 text-center">
+      <div
+        className="relative w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto"
+        style={{ background: 'var(--bg)' }}
+      >
+        <h2 className="text-xl font-bold mb-5 text-center" style={{ color: 'var(--text)' }}>
           {milestone ? '✏️ Modifica Traguardo' : '🏆 Nuovo Traguardo'}
         </h2>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           {/* Emoji */}
           <div>
-            <label className="text-sm font-semibold text-orange-800 mb-2 block">
+            <label className="text-sm font-semibold mb-2 block" style={{ color: 'var(--text-mid)' }}>
               Scegli un'icona
             </label>
             <div className="flex gap-2 flex-wrap">
@@ -67,11 +70,12 @@ export default function MilestoneForm({ milestone, onSave, onClose }) {
                   type="button"
                   key={e}
                   onClick={() => setEmoji(e)}
-                  className={`text-2xl p-2 rounded-xl transition-all ${
+                  className="text-2xl p-2 rounded-xl transition-all"
+                  style={
                     emoji === e
-                      ? 'bg-amber-200 scale-110 shadow-sm'
-                      : 'bg-white hover:bg-orange-50 border border-orange-100'
-                  }`}
+                      ? { background: 'var(--primary-light)', transform: 'scale(1.1)' }
+                      : { background: 'var(--bg-card)', border: '1px solid var(--border-card)' }
+                  }
                 >
                   {e}
                 </button>
@@ -81,7 +85,7 @@ export default function MilestoneForm({ milestone, onSave, onClose }) {
 
           {/* Nome */}
           <div>
-            <label className="text-sm font-semibold text-orange-800 mb-1 block">
+            <label className="text-sm font-semibold mb-1 block" style={{ color: 'var(--text-mid)' }}>
               Nome del traguardo
             </label>
             <input
@@ -89,7 +93,12 @@ export default function MilestoneForm({ milestone, onSave, onClose }) {
               value={nome}
               onChange={(e) => setNome(e.target.value)}
               placeholder="Es. Serata film"
-              className="w-full p-3 rounded-xl border-2 border-orange-200 bg-white focus:border-orange-400 focus:outline-none text-orange-950 placeholder:text-orange-300 transition-colors"
+              className="w-full p-3 rounded-xl border-2 focus:outline-none transition-colors"
+              style={{
+                borderColor: 'var(--border)',
+                background: 'var(--bg-card)',
+                color: 'var(--text)',
+              }}
               required
               autoFocus
             />
@@ -97,7 +106,7 @@ export default function MilestoneForm({ milestone, onSave, onClose }) {
 
           {/* Soglia */}
           <div>
-            <label className="text-sm font-semibold text-orange-800 mb-1 block">
+            <label className="text-sm font-semibold mb-1 block" style={{ color: 'var(--text-mid)' }}>
               Biscotti necessari nel mese 🍪
             </label>
             <input
@@ -106,16 +115,24 @@ export default function MilestoneForm({ milestone, onSave, onClose }) {
               onChange={(e) => setSoglia(e.target.value)}
               min="1"
               max="10000"
-              className="w-full p-3 rounded-xl border-2 border-orange-200 bg-white focus:border-orange-400 focus:outline-none text-orange-950 transition-colors"
+              className="w-full p-3 rounded-xl border-2 focus:outline-none transition-colors"
+              style={{
+                borderColor: 'var(--border)',
+                background: 'var(--bg-card)',
+                color: 'var(--text)',
+              }}
               required
             />
           </div>
 
           {/* Preview */}
-          <div className="bg-amber-50 rounded-xl p-4 text-center border border-amber-200">
+          <div
+            className="rounded-xl p-4 text-center"
+            style={{ background: 'var(--bg-subtle)', border: '1px solid var(--border)' }}
+          >
             <div className="text-3xl mb-1">{emoji}</div>
-            <div className="font-bold text-orange-900">{nome || '...'}</div>
-            <div className="text-sm text-amber-700 font-semibold mt-1">
+            <div className="font-bold" style={{ color: 'var(--text)' }}>{nome || '...'}</div>
+            <div className="text-sm font-semibold mt-1" style={{ color: 'var(--primary)' }}>
               Si sblocca con {soglia || 0} 🍪 guadagnati nel mese
             </div>
           </div>
@@ -125,14 +142,20 @@ export default function MilestoneForm({ milestone, onSave, onClose }) {
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3 rounded-xl font-bold text-orange-600 bg-white border-2 border-orange-200 hover:bg-orange-50 transition-all"
+              className="flex-1 py-3 rounded-xl font-bold border-2 transition-all"
+              style={{
+                color: 'var(--primary)',
+                background: 'var(--bg-card)',
+                borderColor: 'var(--border)',
+              }}
             >
               Annulla
             </button>
             <button
               type="submit"
               disabled={saving || !nome.trim() || soglia < 1}
-              className="flex-1 py-3 rounded-xl font-bold text-white bg-amber-500 hover:bg-amber-600 transition-all active:scale-95 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 py-3 rounded-xl font-bold text-white transition-all active:scale-95 shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ background: 'var(--primary)' }}
             >
               {saving ? '...' : milestone ? 'Salva ✓' : 'Crea 🏆'}
             </button>

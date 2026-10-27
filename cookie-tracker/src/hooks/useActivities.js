@@ -4,7 +4,7 @@ import {
   onSnapshot, query, orderBy
 } from 'firebase/firestore';
 import { db } from '../firebase';
-import { getDayName } from '../utils/dateUtils';
+import { getDayName, toDateString } from '../utils/dateUtils';
 
 /**
  * Hook CRUD per le attività (giornaliere e settimanali).
@@ -60,13 +60,19 @@ export function useActivities(userId) {
 
   /**
    * Filtra le attività per un giorno specifico:
-   * - Le giornaliere appaiono sempre
-   * - Le settimanali solo se il giorno è nell'array `giorni`
+   * - Le 'oggi' (solo per il giorno corrente) appaiono solo nel loro giorno
+   * - Le 'giornaliere' appaiono sempre
+   * - Le 'settimanali' solo se il giorno è nell'array `giorni`
    */
   const getActivitiesForDay = (date) => {
     const dayName = getDayName(date);
+    const dateStr = toDateString(date);
 
     return activities.filter((activity) => {
+      if (activity.tipo === 'oggi') {
+        const actDate = activity.data || (activity.createdAt ? toDateString(new Date(activity.createdAt)) : null);
+        return actDate === dateStr;
+      }
       if (activity.tipo === 'giornaliera') return true;
       if (activity.tipo === 'settimanale') {
         return activity.giorni && activity.giorni.includes(dayName);
